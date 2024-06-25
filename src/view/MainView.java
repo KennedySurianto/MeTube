@@ -1,7 +1,9 @@
 package view;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import controller.MainController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -15,15 +17,20 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import model.Video;
+import view.partials.SideContent;
 
 public class MainView {
 
 	public BorderPane getView() {
 		BorderPane view = new BorderPane();
-
+		MainController mainController = new MainController();
+		
+		// Get video list
+		ArrayList<Video> videoList = mainController.getVideoList();		
+		
 		// Correctly format the video path as a URI
-		String videoPath = new File(getResource("ncs-superhero.mp4")).toURI().toString();
-
+		String videoPath = new File(videoList.get(0).getUri()).toURI().toString();
 		Media media = new Media(videoPath);
 		MediaPlayer mediaPlayer = new MediaPlayer(media);
 		MediaView mediaView = new MediaView(mediaPlayer);
@@ -80,13 +87,20 @@ public class MainView {
 		VBox sidebar = new VBox(10);
 		sidebar.setStyle("-fx-padding: 10px; -fx-background-color: #f4f4f4;");
 		
+		// Add videos to sidebar
+		for (Video v : videoList) {
+			if (!media.getSource().equals(new File(v.getUri()).toURI().toString())) {
+				sidebar.getChildren().add(new SideContent().getView(v));				
+			}
+		}
+		
 		// Simulate related videos with rectangles
 		Rectangle rectangle1 = new Rectangle(300, 180, Color.RED);
 		Rectangle rectangle2 = new Rectangle(300, 180, Color.RED);
 		Rectangle rectangle3 = new Rectangle(300, 180, Color.RED);
 		Rectangle rectangle4 = new Rectangle(300, 180, Color.RED);
 		Rectangle rectangle5 = new Rectangle(300, 180, Color.RED);
-
+		
 		sidebar.getChildren().addAll(rectangle1, rectangle2, rectangle3, rectangle4, rectangle5);
 		
 		// ScrollPane
@@ -105,7 +119,5 @@ public class MainView {
 		return view;
 	}
 
-	private String getResource(String fileName) {
-		return System.getProperty("user.dir") + File.separator + "src" + File.separator + "resources" + File.separator + fileName;
-	}
+	
 }
