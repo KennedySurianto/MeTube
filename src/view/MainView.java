@@ -4,6 +4,7 @@ import java.io.File;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -74,22 +75,29 @@ public class MainView {
 		VBox videoLayout = new VBox();
 		videoLayout.getChildren().addAll(videoPane, controls);
 		VBox.setVgrow(videoPane, Priority.ALWAYS); // Allow videoPane to grow
-
+		
 		// Create a VBox for the right sidebar
 		VBox sidebar = new VBox(10);
 		sidebar.setStyle("-fx-padding: 10px; -fx-background-color: #f4f4f4;");
-
+		
 		// Simulate related videos with rectangles
 		Rectangle rectangle1 = new Rectangle(300, 180, Color.RED);
 		Rectangle rectangle2 = new Rectangle(300, 180, Color.RED);
 		Rectangle rectangle3 = new Rectangle(300, 180, Color.RED);
+		Rectangle rectangle4 = new Rectangle(300, 180, Color.RED);
+		Rectangle rectangle5 = new Rectangle(300, 180, Color.RED);
 
-		sidebar.getChildren().addAll(rectangle1, rectangle2, rectangle3);
-
-		// Add the video layout to the center and the sidebar to the right of the
+		sidebar.getChildren().addAll(rectangle1, rectangle2, rectangle3, rectangle4, rectangle5);
+		
+		// ScrollPane
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setContent(sidebar);
+		scrollPane.setFitToWidth(true);
+		scrollPane.setPrefSize(340, 600);
+		
 		// BorderPane
 		view.setCenter(videoLayout);
-		view.setRight(sidebar);
+		view.setRight(scrollPane);
 
 		// Play the video automatically
 		mediaPlayer.play();
