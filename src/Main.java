@@ -23,7 +23,7 @@ public class Main extends Application {
 	}
 	
 	public void showHomeView() {
-		this.stage.setScene(new Scene(new MainView().getView(), 1300, 600));
+		this.stage.setScene(new Scene(new MainView().getView(), 1300, 660));
 		this.stage.show();
 	}
 }

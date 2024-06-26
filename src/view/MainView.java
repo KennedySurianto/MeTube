@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import controller.MainController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -96,10 +97,16 @@ public class MainView {
 		HBox controls = new HBox(10, skipBackwardButton, playPauseButton, skipForwardButton);
 		controls.setAlignment(Pos.CENTER);
 		controls.setStyle("-fx-background-color: #333; -fx-padding: 10px;");
+		
+		Label videoLabel = new Label(video.getTitle());
+		videoLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+		
+		HBox title = new HBox(10, videoLabel); 
+		title.setStyle("-fx-padding: 10px;");
 
 		// Create a VBox for the video layout
 		VBox videoLayout = new VBox();
-		videoLayout.getChildren().addAll(videoPane, controls);
+		videoLayout.getChildren().addAll(title, videoPane, controls);
 		VBox.setVgrow(videoPane, Priority.ALWAYS); // Allow videoPane to grow
 
 		// Create a VBox for the right sidebar
