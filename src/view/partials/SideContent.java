@@ -10,6 +10,7 @@ import javafx.scene.layout.StackPane;
 import model.Video;
 
 public class SideContent {
+	
 	public BorderPane getView(Video video) {
 		BorderPane view = new BorderPane();
 		view.setPrefSize(300, 180);
@@ -32,4 +33,5 @@ public class SideContent {
 		
 		return view;
 	}
+	
 }

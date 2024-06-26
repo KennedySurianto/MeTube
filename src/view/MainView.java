@@ -25,10 +25,8 @@ public class MainView {
 	ArrayList<Video> videoList;
 
 	public BorderPane getView() {
-		view = new BorderPane();
 		MainController mainController = new MainController();
-
-		// Get video list
+		view = new BorderPane();
 		videoList = mainController.getVideoList();
 
 		playVideo(videoList.get(0), null);
