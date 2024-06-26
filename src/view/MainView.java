@@ -15,8 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.Video;
 import view.partials.SideContent;
@@ -86,11 +84,11 @@ public class MainView {
 		});
 
 		skipForwardButton.setOnAction(e -> {
-			mediaPlayer.seek(mediaPlayer.getCurrentTime().add(javafx.util.Duration.seconds(10)));
+			mediaPlayer.seek(mediaPlayer.getCurrentTime().add(Duration.seconds(10)));
 		});
 
 		skipBackwardButton.setOnAction(e -> {
-			mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(javafx.util.Duration.seconds(10)));
+			mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(Duration.seconds(10)));
 			setButtonText(mediaPlayer, playPauseButton);
 		});
 
@@ -112,22 +110,15 @@ public class MainView {
 		for (Video v : videoList) {
 			if (!media.getSource().equals(new File(v.getUri()).toURI().toString())) {
 				BorderPane sideContent = new SideContent().getView(v);
+				
 				sideContent.setOnMouseClicked(e -> {
 					playVideo(v, mediaPlayer);
 				});
+				
 				sidebar.getChildren().add(sideContent);
 			}
 		}
-
-		// Simulate related videos with rectangles
-		Rectangle rectangle1 = new Rectangle(300, 180, Color.RED);
-		Rectangle rectangle2 = new Rectangle(300, 180, Color.RED);
-		Rectangle rectangle3 = new Rectangle(300, 180, Color.RED);
-		Rectangle rectangle4 = new Rectangle(300, 180, Color.RED);
-		Rectangle rectangle5 = new Rectangle(300, 180, Color.RED);
-
-		sidebar.getChildren().addAll(rectangle1, rectangle2, rectangle3, rectangle4, rectangle5);
-
+		
 		// ScrollPane
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setContent(sidebar);
