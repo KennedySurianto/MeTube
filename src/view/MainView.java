@@ -62,7 +62,7 @@ public class MainView {
 
 		// Create playback control buttons
 		Button playPauseButton = new Button("Pause");
-		Button skipForwardButton = new Button(">> 10s");
+		Button skipForwardButton = new Button("10s >>");
 		Button skipBackwardButton = new Button("<< 10s");
 
 		// Set up event handlers
