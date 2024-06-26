@@ -17,6 +17,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import model.Video;
 import view.partials.SideContent;
 
@@ -67,13 +68,21 @@ public class MainView {
 
 		// Set up event handlers
 		playPauseButton.setOnAction(e -> {
-			if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-				mediaPlayer.pause();
-				playPauseButton.setText("Play");
-			} else {
-				mediaPlayer.play();
-				playPauseButton.setText("Pause");
-			}
+			setButtonAction(mediaPlayer, playPauseButton);
+		});
+
+		// Handle media end event
+		mediaPlayer.setOnEndOfMedia(() -> {
+		    playPauseButton.setText("Play Again");
+		    
+		    playPauseButton.setOnAction(event -> {
+		        mediaPlayer.seek(Duration.ZERO);
+		        
+		        setButtonText(mediaPlayer, playPauseButton);
+		        playPauseButton.setOnAction(e -> {
+		        	setButtonAction(mediaPlayer, playPauseButton);
+		        });
+		    });
 		});
 
 		skipForwardButton.setOnAction(e -> {
@@ -82,6 +91,7 @@ public class MainView {
 
 		skipBackwardButton.setOnAction(e -> {
 			mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(javafx.util.Duration.seconds(10)));
+			setButtonText(mediaPlayer, playPauseButton);
 		});
 
 		// Arrange buttons in an HBox
@@ -128,5 +138,23 @@ public class MainView {
 		view.setRight(scrollPane);
 
 		mediaPlayer.play();
+	}
+	
+	private void setButtonText(MediaPlayer mediaPlayer, Button playPauseButton) {
+		if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+			playPauseButton.setText("Pause");
+		} else {
+			playPauseButton.setText("Play");
+		}
+	}
+	
+	private void setButtonAction(MediaPlayer mediaPlayer, Button playPauseButton) {
+		if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+			mediaPlayer.pause();
+			playPauseButton.setText("Play");
+		} else {
+			mediaPlayer.play();
+			playPauseButton.setText("Pause");
+		}
 	}
 }
