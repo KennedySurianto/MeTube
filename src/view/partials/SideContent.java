@@ -16,7 +16,7 @@ public class SideContent {
 		content.setPrefSize(300, 180);
 
 		Label titleLabel = new Label(video.getTitle());
-		titleLabel.setStyle("-fx-font-size: 16px;");
+		titleLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
 
 		String thumbnailPath = new File(video.getThumbnail()).toURI().toString();
 		Image videoImage = new Image(thumbnailPath);

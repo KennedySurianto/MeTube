@@ -134,10 +134,10 @@ public class MainView {
 		controls.setStyle("-fx-background-color: #333; -fx-padding: 10px;");
 
 		Label videoLabel = new Label(video.getTitle());
-		videoLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+		videoLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;  -fx-text-fill: white;");
 
 		HBox title = new HBox(10, videoLabel);
-		title.setStyle("-fx-padding: 10px;");
+		title.setStyle("-fx-padding: 10px; -fx-background-color: #333;");
 
 		// Create a VBox for the video layout
 		VBox videoLayout = new VBox();
@@ -146,7 +146,7 @@ public class MainView {
 
 		// Create a VBox for the right sidebar
 		VBox sidebar = new VBox(10);
-		sidebar.setStyle("-fx-padding: 10px; -fx-background-color: #f4f4f4;");
+		sidebar.setStyle("-fx-padding: 10px; -fx-background-color: #333;");
 
 		// Add videos to sidebar
 		for (Video v : videoList) {
@@ -166,6 +166,7 @@ public class MainView {
 		scrollPane.setContent(sidebar);
 		scrollPane.setFitToWidth(true);
 		scrollPane.setPrefSize(340, 600);
+		scrollPane.setStyle("-fx-background-color: #333;");
 
 		view.setCenter(videoLayout);
 		view.setRight(scrollPane);
