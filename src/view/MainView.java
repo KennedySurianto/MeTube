@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -30,7 +31,7 @@ public class MainView {
 		videoList = mainController.getVideoList();
 
 		playVideo(videoList.get(0), null);
-		
+
 		return view;
 	}
 
@@ -57,6 +58,26 @@ public class MainView {
 		// Ensure the MediaView preserves the aspect ratio
 		mediaView.setPreserveRatio(true);
 
+		// Duration slider
+		Slider timeSlider = new Slider();
+		timeSlider.setMin(0);
+		timeSlider.setMax(100);
+
+		timeSlider.setStyle("-fx-background-color: #333;");
+
+		mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+			if (!timeSlider.isValueChanging()) {
+				timeSlider.setValue(newTime.toMillis() / mediaPlayer.getTotalDuration().toMillis() * 100);
+			}
+		});
+
+		timeSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+			if (timeSlider.isValueChanging()) {
+				mediaPlayer.seek(
+						Duration.millis(newValue.doubleValue() / 100 * mediaPlayer.getTotalDuration().toMillis()));
+			}
+		});
+
 		videoPane.getChildren().add(mediaView);
 		StackPane.setAlignment(mediaView, Pos.CENTER);
 
@@ -72,16 +93,16 @@ public class MainView {
 
 		// Handle media end event
 		mediaPlayer.setOnEndOfMedia(() -> {
-		    playPauseButton.setText("Play Again");
-		    
-		    playPauseButton.setOnAction(event -> {
-		        mediaPlayer.seek(Duration.ZERO);
-		        
-		        setButtonText(mediaPlayer, playPauseButton);
-		        playPauseButton.setOnAction(e -> {
-		        	setButtonAction(mediaPlayer, playPauseButton);
-		        });
-		    });
+			playPauseButton.setText("Play Again");
+
+			playPauseButton.setOnAction(event -> {
+				mediaPlayer.seek(Duration.ZERO);
+
+				setButtonText(mediaPlayer, playPauseButton);
+				playPauseButton.setOnAction(e -> {
+					setButtonAction(mediaPlayer, playPauseButton);
+				});
+			});
 		});
 
 		skipForwardButton.setOnAction(e -> {
@@ -97,16 +118,16 @@ public class MainView {
 		HBox controls = new HBox(10, skipBackwardButton, playPauseButton, skipForwardButton);
 		controls.setAlignment(Pos.CENTER);
 		controls.setStyle("-fx-background-color: #333; -fx-padding: 10px;");
-		
+
 		Label videoLabel = new Label(video.getTitle());
 		videoLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-		
-		HBox title = new HBox(10, videoLabel); 
+
+		HBox title = new HBox(10, videoLabel);
 		title.setStyle("-fx-padding: 10px;");
 
 		// Create a VBox for the video layout
 		VBox videoLayout = new VBox();
-		videoLayout.getChildren().addAll(title, videoPane, controls);
+		videoLayout.getChildren().addAll(title, videoPane, timeSlider, controls);
 		VBox.setVgrow(videoPane, Priority.ALWAYS); // Allow videoPane to grow
 
 		// Create a VBox for the right sidebar
@@ -117,15 +138,15 @@ public class MainView {
 		for (Video v : videoList) {
 			if (!media.getSource().equals(new File(v.getUri()).toURI().toString())) {
 				BorderPane sideContent = new SideContent().getView(v);
-				
+
 				sideContent.setOnMouseClicked(e -> {
 					playVideo(v, mediaPlayer);
 				});
-				
+
 				sidebar.getChildren().add(sideContent);
 			}
 		}
-		
+
 		// ScrollPane
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setContent(sidebar);
@@ -137,7 +158,7 @@ public class MainView {
 
 		mediaPlayer.play();
 	}
-	
+
 	private void setButtonText(MediaPlayer mediaPlayer, Button playPauseButton) {
 		if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
 			playPauseButton.setText("Pause");
@@ -145,7 +166,7 @@ public class MainView {
 			playPauseButton.setText("Play");
 		}
 	}
-	
+
 	private void setButtonAction(MediaPlayer mediaPlayer, Button playPauseButton) {
 		if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
 			mediaPlayer.pause();
