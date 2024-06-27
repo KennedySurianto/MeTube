@@ -57,14 +57,16 @@ public class MainView {
 
 		// Ensure the MediaView preserves the aspect ratio
 		mediaView.setPreserveRatio(true);
+		
+		videoPane.getChildren().add(mediaView);
+		StackPane.setAlignment(mediaView, Pos.CENTER);
 
 		// Duration slider
 		Slider timeSlider = new Slider();
 		timeSlider.setMin(0);
 		timeSlider.setMax(100);
-
 		timeSlider.setStyle("-fx-background-color: #333;");
-
+		
 		mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
 			if (!timeSlider.isValueChanging()) {
 				timeSlider.setValue(newTime.toMillis() / mediaPlayer.getTotalDuration().toMillis() * 100);
@@ -77,9 +79,21 @@ public class MainView {
 						Duration.millis(newValue.doubleValue() / 100 * mediaPlayer.getTotalDuration().toMillis()));
 			}
 		});
+		
+		// Volume slider
+        Slider volumeSlider = new Slider(0, 1, 0.5); // Min: 0, Max: 1, Initial: 0.5
+        volumeSlider.setPrefWidth(100); // Arbitrary small number for HBox to scale properly
+        volumeSlider.setStyle("-fx-background-color: #333;");
+        
+        volumeSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+            mediaPlayer.setVolume(newValue.doubleValue());
+        });
 
-		videoPane.getChildren().add(mediaView);
-		StackPane.setAlignment(mediaView, Pos.CENTER);
+        mediaPlayer.setVolume(0.5); // Set initial volume
+        
+        // Store timeSlider and volumeSlider in an HBox
+        HBox sliders = new HBox(timeSlider, volumeSlider);
+        HBox.setHgrow(timeSlider, Priority.ALWAYS);
 
 		// Create playback control buttons
 		Button playPauseButton = new Button("Pause");
@@ -127,7 +141,7 @@ public class MainView {
 
 		// Create a VBox for the video layout
 		VBox videoLayout = new VBox();
-		videoLayout.getChildren().addAll(title, videoPane, timeSlider, controls);
+		videoLayout.getChildren().addAll(title, videoPane, sliders, controls);
 		VBox.setVgrow(videoPane, Priority.ALWAYS); // Allow videoPane to grow
 
 		// Create a VBox for the right sidebar
